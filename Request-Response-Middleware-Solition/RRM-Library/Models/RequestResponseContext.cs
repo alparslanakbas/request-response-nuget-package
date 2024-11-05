@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Text.Json.Serialization;
-
-namespace RRM_Library.Models
+﻿namespace RRM_Library.Models
 {
     public class RequestResponseContext
     {
-        readonly HttpContext _context;
+        internal readonly HttpContext _context;
         public RequestResponseContext(HttpContext context)
         {
             this._context = context;

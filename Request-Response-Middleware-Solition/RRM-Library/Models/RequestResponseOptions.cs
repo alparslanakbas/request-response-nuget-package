@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace RRM_Library.Models
+﻿namespace RRM_Library.Models
 {
     public class RequestResponseOptions
     {

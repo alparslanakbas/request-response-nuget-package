@@ -1,14 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.IO;
-using RRM_Library.Models;
-using System.Diagnostics;
-
-namespace RRM_Library.Middlewares
+﻿namespace RRM_Library.Middlewares
 {
     public abstract class BaseRequestResponseMiddleware
     {
         readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
         readonly RequestResponseOptions _options;
+        readonly ILogWriter _logWriter;
 
         protected async Task<RequestResponseContext> BaseMiddlewareInvokeAsync(HttpContext context, RequestDelegate next)
         {
@@ -28,12 +24,15 @@ namespace RRM_Library.Middlewares
             string responseBodyText = await new StreamReader(context.Response.Body).ReadToEndAsync();
             context.Request.Body.Seek(0, SeekOrigin.Begin);
 
-            return new RequestResponseContext(context)
+            var result = new RequestResponseContext(context)
             {
                 Request = requestBody,
                 RequestTime = TimeSpan.FromTicks(sw.ElapsedTicks),
                 Response = responseBodyText
             };
+
+            await _logWriter?.WriteAsync(result);
+            return result;
         }
 
         // Reads the entire stream in chunks and returns it as a complete string.
