@@ -5,15 +5,16 @@
         public LogLevel LogLevel { get; set; } = LogLevel.Information;
         public string LoggerCategoryName { get; set; } = "RequestResponseLoggerMiddleware";
 
-        private List<LogFields> _loggingFields = new();
+        private List<LogFields> loggingFields;
 
-        public IReadOnlyList<LogFields> LoggingFields
+        public List<LogFields> LoggingFields
         {
             get
             {
-                return _loggingFields ??= new List<LogFields>();
+                return loggingFields ??= new List<LogFields>();
             }
-            init => _loggingFields = value?.ToList() ?? new List<LogFields>();
+
+            set => loggingFields = value;
         }
 
         public enum LogFields

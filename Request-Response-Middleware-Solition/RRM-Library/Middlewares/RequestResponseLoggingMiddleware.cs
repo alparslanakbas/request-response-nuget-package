@@ -2,16 +2,13 @@
 {
     public class RequestResponseLoggingMiddleware : BaseRequestResponseMiddleware
     {
-        readonly ILogWriter _logWriter;
-
-        public RequestResponseLoggingMiddleware(ILogWriter logWriter)
+        public RequestResponseLoggingMiddleware(RequestDelegate next, ILogWriter logWriter): base(next, logWriter)
         {
-            _logWriter = logWriter;
         }
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext context)
         {
-            await BaseMiddlewareInvokeAsync(context, next);
+            await BaseMiddlewareInvokeAsync(context);
         }
     }
 }

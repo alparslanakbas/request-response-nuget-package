@@ -3,13 +3,20 @@
     public abstract class BaseRequestResponseMiddleware
     {
         readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
-        readonly RequestResponseOptions _options;
         readonly ILogWriter _logWriter;
+        readonly RequestDelegate next;
 
-        protected async Task<RequestResponseContext> BaseMiddlewareInvokeAsync(HttpContext context, RequestDelegate next)
+        public BaseRequestResponseMiddleware(RequestDelegate next, ILogWriter logWriter)
+        {
+            _recyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
+            _logWriter = logWriter;
+            this.next = next;
+        }
+
+        protected async Task<RequestResponseContext> BaseMiddlewareInvokeAsync(HttpContext context)
         {
             context.Request.EnableBuffering();
-            var requestBody = await GetRequestBody(context.Request);
+            var requestBody = await GetRequestBody(context);
 
             var originalBodyStream = context.Response.Body;
 
@@ -20,9 +27,9 @@
             await next(context);
             sw.Stop();
 
-            context.Request.Body.Seek(0, SeekOrigin.Begin);
+            context.Response.Body.Seek(0, SeekOrigin.Begin);
             string responseBodyText = await new StreamReader(context.Response.Body).ReadToEndAsync();
-            context.Request.Body.Seek(0, SeekOrigin.Begin);
+            context.Response.Body.Seek(0, SeekOrigin.Begin);
 
             var result = new RequestResponseContext(context)
             {
@@ -58,13 +65,13 @@
         }
 
         // Async reads the request body, buffering it for multiple reads, and returns the content as a string.
-        private async Task<string> GetRequestBody(HttpRequest request)
+        private async Task<string> GetRequestBody(HttpContext context)
         {
-            request.EnableBuffering();
+            context.Request.EnableBuffering();
             await using var requestStream = _recyclableMemoryStreamManager.GetStream();
-            await request.Body.CopyToAsync(requestStream);
+            await context.Request.Body.CopyToAsync(requestStream);
             string requestBody = ReadStreamInChunks(requestStream);
-            request.Body.Seek(0, SeekOrigin.Begin);
+            context.Request.Body.Seek(0, SeekOrigin.Begin);
             return requestBody;
         }
     }

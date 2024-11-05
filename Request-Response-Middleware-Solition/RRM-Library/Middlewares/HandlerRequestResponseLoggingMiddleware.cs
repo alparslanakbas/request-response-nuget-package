@@ -3,17 +3,16 @@
     public class HandlerRequestResponseLoggingMiddleware : BaseRequestResponseMiddleware
     {
         readonly Func<RequestResponseContext, Task> _requestResponseHandler;
-        readonly ILogWriter _logWriter;
-
-        public HandlerRequestResponseLoggingMiddleware(Func<RequestResponseContext, Task> requestResponseHandler, ILogWriter logWriter)
+        
+        public HandlerRequestResponseLoggingMiddleware(RequestDelegate next, Func<RequestResponseContext, Task> requestResponseHandler, ILogWriter logWriter) : base(next, logWriter)
         {
             _requestResponseHandler = requestResponseHandler;
-            _logWriter = logWriter;
         }
 
-        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+        public async Task InvokeAsync(HttpContext context)
         {
-            await BaseMiddlewareInvokeAsync(context, next);
+            var requestResponseContext = await BaseMiddlewareInvokeAsync(context);
+            await _requestResponseHandler.Invoke(requestResponseContext);
         }
     }
 }

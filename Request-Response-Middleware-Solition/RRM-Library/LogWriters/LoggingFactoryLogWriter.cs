@@ -2,23 +2,22 @@
 {
     internal class LoggingFactoryLogWriter : ILogWriter
     {
-        readonly ILoggerFactory _loggerFactory;
+        readonly ILogger _logger;
         readonly LoggingOptions _loggingOptions;
-        readonly RequestResponseContext _context;
+
+        public ILogMessageCreator MessageCreator { get; }
 
         internal LoggingFactoryLogWriter(ILoggerFactory loggerFactory, LoggingOptions options)
         {
-            _loggerFactory = loggerFactory;
+            _logger = loggerFactory.CreateLogger(options.LoggerCategoryName);
             _loggingOptions = options;     
-            MessageCreator = new LoggerFactoryMessageCreator(_loggingOptions, _context);
+            MessageCreator = new LoggerFactoryMessageCreator(options);
         }
-
-        public ILogMessageCreator MessageCreator { get; }
 
         public async Task WriteAsync(RequestResponseContext context)
         {
             var message = MessageCreator.Create(context);
-            _loggerFactory.CreateLogger(_loggingOptions.LoggerCategoryName).Log(_loggingOptions.LogLevel, message,(context));
+            _logger.Log(_loggingOptions.LogLevel, message);
 
             await Task.CompletedTask;
 

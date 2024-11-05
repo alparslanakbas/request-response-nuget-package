@@ -1,4 +1,4 @@
-﻿namespace RRM_Library.Models
+﻿namespace RRM_Library
 {
     public class RequestResponseContext
     {

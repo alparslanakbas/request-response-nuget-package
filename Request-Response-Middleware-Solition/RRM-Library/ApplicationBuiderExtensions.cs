@@ -1,6 +1,4 @@
-﻿
-
-namespace RRM_Library
+﻿namespace RRM_Library
 {
     public static class ApplicationBuiderExtensions
     {
@@ -9,14 +7,17 @@ namespace RRM_Library
             var opt = new RequestResponseOptions();
             options(opt);
 
+            if (opt.RequestResponseHandler is null && opt.LoggerFactory is null)
+                throw new ArgumentNullException($"{nameof(opt.RequestResponseHandler)} and {nameof(opt.LoggerFactory)}");
+
             ILogWriter logWriter = opt.LoggerFactory is null 
                 ? new NullLogWriter()
-                : new LoggingFactoryLogWriter(opt.LoggerFactory, opt.LoggingOptions);
+                : new LoggingFactoryLogWriter(opt.LoggerFactory, opt.LoggingOption);
 
             if (opt.RequestResponseHandler is not null)
-                appBuilder.UseMiddleware<HandlerRequestResponseLoggingMiddleware>(opt.RequestResponseHandler);
+                appBuilder.UseMiddleware<HandlerRequestResponseLoggingMiddleware>(opt.RequestResponseHandler, logWriter);
             else
-                appBuilder.UseMiddleware<RequestResponseLoggingMiddleware>(opt.RequestResponseHandler);
+                appBuilder.UseMiddleware<RequestResponseLoggingMiddleware>(logWriter);
 
             return appBuilder;
         }
