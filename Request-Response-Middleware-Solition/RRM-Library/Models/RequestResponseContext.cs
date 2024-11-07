@@ -14,6 +14,13 @@
         public int? ResponseLength => Response?.Length;
         [JsonIgnore]
         public TimeSpan RequestTime { get; set; }
+        public int StatusCode { get; set; }
+        public string Method { get; set; }
+        public string? ClientIPAddress { get; set; }
+        public string? ExternalIPAddress { get; set; }
+        public string HttpVersion { get; set; }
+        public string? UserAgent { get; set; }
+        public string? Cookies { get; set; }
         public Uri Url => BuildUrl();
 
         // Build the URL from the request

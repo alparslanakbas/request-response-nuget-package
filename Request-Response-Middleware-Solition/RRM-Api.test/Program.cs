@@ -28,6 +28,14 @@ app.AddRequestResponseMiddleware(opts =>
         Console.WriteLine($"Response: {context.Response}");
         Console.WriteLine($"Timer: {context.FormatedRequestTime}");
         Console.WriteLine($"Url: {context.Url}");
+        Console.WriteLine($"Status Code: {context.StatusCode}");
+        Console.WriteLine($"Method: {context.Method}");
+        Console.WriteLine($"HTTP Version: {context.HttpVersion}");
+        Console.WriteLine($"Client IP Address: {context.ClientIPAddress}");
+        Console.WriteLine($"External IP Address: {context.ExternalIPAddress}");
+        Console.WriteLine($"User Agent: {context.UserAgent}");
+        Console.WriteLine($"Cookies: {context.Cookies}");
+
         await Task.CompletedTask;
     });
 });

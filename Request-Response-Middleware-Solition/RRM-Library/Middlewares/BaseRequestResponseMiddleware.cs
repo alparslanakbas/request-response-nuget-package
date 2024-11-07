@@ -1,4 +1,7 @@
-﻿namespace RRM_Library.Middlewares
+﻿using System.Net;
+using System.Text.Json;
+
+namespace RRM_Library.Middlewares
 {
     public abstract class BaseRequestResponseMiddleware
     {
@@ -35,7 +38,14 @@
             {
                 Request = requestBody,
                 RequestTime = TimeSpan.FromTicks(sw.ElapsedTicks),
-                Response = responseBodyText
+                Response = responseBodyText,
+                StatusCode = context.Response.StatusCode,
+                Method = context.Request.Method,
+                ClientIPAddress = GetClientIpAddress(context),
+                ExternalIPAddress = GetExternalIpAddressAsync().Result,
+                HttpVersion = context.Request.Protocol,
+                UserAgent = context.Request.Headers["User-Agent"],
+                Cookies = FormatCookiesToJson(context.Request.Cookies)
             };
 
             await _logWriter?.WriteAsync(result);
@@ -73,6 +83,53 @@
             string requestBody = ReadStreamInChunks(requestStream);
             context.Request.Body.Seek(0, SeekOrigin.Begin);
             return requestBody;
+        }
+
+        // Helper for cookie formatting String
+        private string FormatCookiesToString(IRequestCookieCollection cookies)
+        {
+            if (cookies is null || !cookies.Any())
+            {
+                return "No cookies";
+            }
+
+            var sb = new StringBuilder();
+            foreach (var cookie in cookies)
+            {
+                sb.AppendFormat("{0}: {1}\n; ", cookie.Key, cookie.Value);
+            }
+
+            return sb.ToString();
+        }
+
+        // Helper for cookie formatting Json
+        private string FormatCookiesToJson(IRequestCookieCollection cookies)
+        {
+            if (cookies is null || !cookies.Any())
+            {
+                return "{}";
+            }
+
+            var cookiesDictionary = new Dictionary<string, string>();
+            return JsonSerializer.Serialize(cookiesDictionary);
+        }
+
+        // Client IP Address
+        private string GetClientIpAddress(HttpContext context)
+        {
+            if (context.Request.Headers.ContainsKey("X-Forwarded-For"))
+            {
+                return context.Request.Headers["X-Forwarded-For"].FirstOrDefault();
+            }
+            return context.Connection.RemoteIpAddress?.ToString() ?? "Unknown IP";
+        }
+
+        // External IP Address
+        private async Task<string> GetExternalIpAddressAsync()
+        {
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetStringAsync("https://api.ipify.org");
+            return response;
         }
     }
 }
