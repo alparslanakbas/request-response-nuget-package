@@ -2,7 +2,7 @@
 {
     public class RequestResponseLoggingMiddleware : BaseRequestResponseMiddleware
     {
-        public RequestResponseLoggingMiddleware(RequestDelegate next, ILogWriter logWriter): base(next, logWriter)
+        public RequestResponseLoggingMiddleware(RequestDelegate next, ILogWriter logWriter, IHttpClientFactory httpClientFactory) : base(next, logWriter, httpClientFactory)
         {
         }
 

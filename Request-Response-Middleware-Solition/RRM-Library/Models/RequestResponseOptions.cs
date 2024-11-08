@@ -2,9 +2,9 @@
 {
     public class RequestResponseOptions
     {
-        internal Func<RequestResponseContext, Task> RequestResponseHandler { get; set; }
-        internal ILoggerFactory LoggerFactory;
-        internal LoggingOptions LoggingOption;
+        internal Func<RequestResponseContext, Task>? RequestResponseHandler { get; set; }
+        internal ILoggerFactory? LoggerFactory;
+        internal LoggingOptions? LoggingOption;
 
         public void UseHandler(Func<RequestResponseContext, Task> handler)
         {

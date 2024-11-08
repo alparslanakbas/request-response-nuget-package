@@ -4,7 +4,7 @@
     {
         readonly Func<RequestResponseContext, Task> _requestResponseHandler;
         
-        public HandlerRequestResponseLoggingMiddleware(RequestDelegate next, Func<RequestResponseContext, Task> requestResponseHandler, ILogWriter logWriter) : base(next, logWriter)
+        public HandlerRequestResponseLoggingMiddleware(RequestDelegate next, Func<RequestResponseContext, Task> requestResponseHandler, ILogWriter logWriter, IHttpClientFactory httpClientFactory) : base(next, logWriter, httpClientFactory)
         {
             _requestResponseHandler = requestResponseHandler;
         }

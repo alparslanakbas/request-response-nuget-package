@@ -16,6 +16,7 @@ namespace RRM_Library.MessageCreators
                 LogFields.Path => context._context.Request.Path.Value ?? string.Empty,
                 LogFields.HostName => context._context.Request.Host.Value ?? string.Empty,
                 LogFields.ResponseTime => context.FormatedRequestTime ?? string.Empty,
+                LogFields.StatusCode => context.StatusCode.ToString(),
                 _ => string.Empty
             };
         }

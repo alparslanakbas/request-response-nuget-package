@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using RRM_Library;
-using RRM_Library.Middlewares;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
+
+builder.Services.AddLogging(opts =>
+{
+    opts.AddConsole();
+});
 
 
 var app = builder.Build();
@@ -21,9 +27,10 @@ if (app.Environment.IsDevelopment())
 
 
 app.AddRequestResponseMiddleware(opts =>
-{
+{ 
     opts.UseHandler(async context =>
     {
+        Console.WriteLine("--Handler--\n");
         Console.WriteLine($"Request: {context.Request}");
         Console.WriteLine($"Response: {context.Response}");
         Console.WriteLine($"Timer: {context.FormatedRequestTime}");
@@ -38,17 +45,35 @@ app.AddRequestResponseMiddleware(opts =>
 
         await Task.CompletedTask;
     });
+
+    
+    opts.UseLogger(app.Services.GetRequiredService<ILoggerFactory>(), opts =>
+    {
+        opts.LogLevel = LogLevel.Error;
+        opts.LoggerCategoryName = "RRM-Api-Test";
+
+        opts.LoggingFields = 
+                         RRM_Library.Models.LoggingOptions.LogFields.Request |
+                         RRM_Library.Models.LoggingOptions.LogFields.Response |
+                         RRM_Library.Models.LoggingOptions.LogFields.ResponseTime |
+                         RRM_Library.Models.LoggingOptions.LogFields.StatusCode |
+                         RRM_Library.Models.LoggingOptions.LogFields.HostName |
+                         RRM_Library.Models.LoggingOptions.LogFields.Path |
+                         RRM_Library.Models.LoggingOptions.LogFields.QueryString 
+                         ;
+    });
 });
 
 // GET
-app.MapGet("/GetUserInfo/{id}", (int id) =>
+app.MapGet("/GetUserInfo/{id}", (int id, ILogger<Program> logger) =>
 {
-    var response = new UserLoginResponseModel
-    {
-        Success = true,
-        UserEmail = "alparslan@gmail.com"
-    };
-    return Results.Ok(response);
+        var response = new UserLoginResponseModel
+        {
+            Success = true,
+            UserEmail = "alparslan@gmail.com"
+        };
+        logger.LogInformation("User info is requested");
+        return Results.Ok(response);
 })
 .WithName("GetUserInfo")
 .WithOpenApi();
