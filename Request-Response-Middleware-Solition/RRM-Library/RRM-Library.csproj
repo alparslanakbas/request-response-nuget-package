@@ -7,6 +7,16 @@
     <Nullable>enable</Nullable>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageIcon>icon.png</PackageIcon>
+    <Authors>Alparslan Akbas</Authors>
+    <Company>Codeland</Company>
+    <Product></Product>
+    <PackageId>CD.RequestResponse.Middleware</PackageId>
+    <Description>This package is built for handling and managing Request and Response for Web API applications.</Description>
+    <PackageProjectUrl>https://alparslanakbas.github.io/</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/alparslanakbas/request-response-nuget-package</RepositoryUrl>
+    <PackageTags>RequestResponse;Middleware;Dotnet8;Logging</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
@@ -19,7 +29,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="License\LICENSE.txt">
+    <None Update="icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
