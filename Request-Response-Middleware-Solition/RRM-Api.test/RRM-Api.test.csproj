@@ -8,12 +8,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CD.RequestResponse.Middleware" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.10" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RRM-Library\RRM-Library.csproj" />
+    <ProjectReference Include="..\RRM-File-Logger.Library\RRM-File-Logger.Library.csproj" />
   </ItemGroup>
 
 </Project>

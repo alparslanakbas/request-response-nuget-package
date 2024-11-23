@@ -5,7 +5,9 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RRM-Library", "RRM-Library\RRM-Library.csproj", "{C504726B-C892-45FF-AB80-305137E55E46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RRM-Api.test", "RRM-Api.test\RRM-Api.test.csproj", "{3C6F1E80-4AC8-4AE8-A539-2444EAC8110D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RRM-Api.test", "RRM-Api.test\RRM-Api.test.csproj", "{3C6F1E80-4AC8-4AE8-A539-2444EAC8110D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RRM-File-Logger.Library", "RRM-File-Logger.Library\RRM-File-Logger.Library.csproj", "{FCEF8FCC-6D1F-4CDB-98F9-1CA5A8AFDF63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3C6F1E80-4AC8-4AE8-A539-2444EAC8110D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C6F1E80-4AC8-4AE8-A539-2444EAC8110D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C6F1E80-4AC8-4AE8-A539-2444EAC8110D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCEF8FCC-6D1F-4CDB-98F9-1CA5A8AFDF63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCEF8FCC-6D1F-4CDB-98F9-1CA5A8AFDF63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCEF8FCC-6D1F-4CDB-98F9-1CA5A8AFDF63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCEF8FCC-6D1F-4CDB-98F9-1CA5A8AFDF63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

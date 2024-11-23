@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using RRM_File_Logger.Library;
 using RRM_Library;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,42 +26,52 @@ if (app.Environment.IsDevelopment())
 }
 
 
-app.AddRequestResponseMiddleware(opts =>
-{ 
-    opts.UseHandler(async context =>
-    {
-        Console.WriteLine("--Handler--\n");
-        Console.WriteLine($"Request: {context.Request}");
-        Console.WriteLine($"Response: {context.Response}");
-        Console.WriteLine($"Timer: {context.FormatedRequestTime}");
-        Console.WriteLine($"Url: {context.Url}");
-        Console.WriteLine($"Status Code: {context.StatusCode}");
-        Console.WriteLine($"Method: {context.Method}");
-        Console.WriteLine($"HTTP Version: {context.HttpVersion}");
-        Console.WriteLine($"Client IP Address: {context.ClientIPAddress}");
-        Console.WriteLine($"External IP Address: {context.ExternalIPAddress}");
-        Console.WriteLine($"User Agent: {context.UserAgent}");
-        Console.WriteLine($"Cookies: {context.Cookies}");
 
-        await Task.CompletedTask;
-    });
+//app.AddRequestResponseMiddleware(opts =>
+//{
+//    opts.UseHandler(async context =>
+//    {
+//        Console.WriteLine("--Handler--\n");
+//        Console.WriteLine($"Request: {context.Request}");
+//        Console.WriteLine($"Response: {context.Response}");
+//        Console.WriteLine($"Timer: {context.FormatedRequestTime}");
+//        Console.WriteLine($"Url: {context.Url}");
+//        Console.WriteLine($"Status Code: {context.StatusCode}");
+//        Console.WriteLine($"Method: {context.Method}");
+//        Console.WriteLine($"HTTP Version: {context.HttpVersion}");
+//        Console.WriteLine($"Client IP Address: {context.ClientIPAddress}");
+//        Console.WriteLine($"External IP Address: {context.ExternalIPAddress}");
+//        Console.WriteLine($"User Agent: {context.UserAgent}");
+//        Console.WriteLine($"Cookies: {context.Cookies}");
 
-    
-    opts.UseLogger(app.Services.GetRequiredService<ILoggerFactory>(), opts =>
-    {
-        opts.LogLevel = LogLevel.Error;
-        opts.LoggerCategoryName = "RRM-Api-Test";
+//        await Task.CompletedTask;
+//    });
 
-        opts.LoggingFields = 
-                         RRM_Library.Models.LoggingOptions.LogFields.Request |
-                         RRM_Library.Models.LoggingOptions.LogFields.Response |
-                         RRM_Library.Models.LoggingOptions.LogFields.ResponseTime |
-                         RRM_Library.Models.LoggingOptions.LogFields.StatusCode |
-                         RRM_Library.Models.LoggingOptions.LogFields.HostName |
-                         RRM_Library.Models.LoggingOptions.LogFields.Path |
-                         RRM_Library.Models.LoggingOptions.LogFields.QueryString 
-                         ;
-    });
+
+//    opts.UseLogger(app.Services.GetRequiredService<ILoggerFactory>(), opts =>
+//    {
+//        opts.LogLevel = LogLevel.Error;
+//        opts.LoggerCategoryName = "RRM-Api-Test";
+
+//        opts.LoggingFields =
+//                         RRM_Library.Models.LoggingOptions.LogFields.Request |
+//                         RRM_Library.Models.LoggingOptions.LogFields.Response |
+//                         RRM_Library.Models.LoggingOptions.LogFields.ResponseTime |
+//                         RRM_Library.Models.LoggingOptions.LogFields.StatusCode |
+//                         RRM_Library.Models.LoggingOptions.LogFields.HostName |
+//                         RRM_Library.Models.LoggingOptions.LogFields.Path |
+//                         RRM_Library.Models.LoggingOptions.LogFields.QueryString
+//                         ;
+//    });
+//});
+
+app.AddRequestResponseFileLoggerMiddleware(opts =>
+{
+    opts.FileDirectory = AppDomain.CurrentDomain.BaseDirectory;
+    opts.FileName = "alparslan_log";
+    opts.Extension = ".txt";
+    opts.UseJsonFormat = true;
+    opts.ForceCreateDirectory = true;
 });
 
 // GET
