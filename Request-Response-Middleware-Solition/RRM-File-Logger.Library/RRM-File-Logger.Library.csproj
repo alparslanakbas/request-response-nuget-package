@@ -12,6 +12,10 @@
     <PackageProjectUrl>https://alparslanakbas.github.io/</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/alparslanakbas/request-response-nuget-package/tree/main/Request-Response-Middleware-Solition/RRM-File-Logger.Library</RepositoryUrl>
+    <PackageTags>FileLogger;Middleware;Dotnet8;Logging</PackageTags>
+    <PackageLicenseFile>LICENCE.txt</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +30,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="LICENCE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
     <None Update="README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
