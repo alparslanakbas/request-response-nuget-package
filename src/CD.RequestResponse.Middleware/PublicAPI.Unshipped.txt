@@ -1,0 +1,103 @@
+#nullable enable
+CD.RequestResponse.FileRequestResponseLoggingOptions
+CD.RequestResponse.FileRequestResponseLoggingOptions.DirectoryPath.get -> string!
+CD.RequestResponse.FileRequestResponseLoggingOptions.DirectoryPath.set -> void
+CD.RequestResponse.FileRequestResponseLoggingOptions.FileNamePrefix.get -> string!
+CD.RequestResponse.FileRequestResponseLoggingOptions.FileNamePrefix.set -> void
+CD.RequestResponse.FileRequestResponseLoggingOptions.FileRequestResponseLoggingOptions() -> void
+CD.RequestResponse.FileRequestResponseLoggingOptions.QueueCapacity.get -> int
+CD.RequestResponse.FileRequestResponseLoggingOptions.QueueCapacity.set -> void
+CD.RequestResponse.FileRequestResponseLoggingOptions.RollDaily.get -> bool
+CD.RequestResponse.FileRequestResponseLoggingOptions.RollDaily.set -> void
+CD.RequestResponse.IRequestResponseLogSink
+CD.RequestResponse.IRequestResponseLogSink.WriteAsync(CD.RequestResponse.RequestResponseLogEntry! entry, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.ValueTask
+CD.RequestResponse.RequestResponseApplicationBuilderExtensions
+CD.RequestResponse.RequestResponseLogEntry
+CD.RequestResponse.RequestResponseLogEntry.ClientIpAddress.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.ClientIpAddress.init -> void
+CD.RequestResponse.RequestResponseLogEntry.CompletedSuccessfully.get -> bool
+CD.RequestResponse.RequestResponseLogEntry.CompletedSuccessfully.init -> void
+CD.RequestResponse.RequestResponseLogEntry.Duration.get -> System.TimeSpan?
+CD.RequestResponse.RequestResponseLogEntry.Duration.init -> void
+CD.RequestResponse.RequestResponseLogEntry.DurationMilliseconds.get -> double?
+CD.RequestResponse.RequestResponseLogEntry.ExceptionType.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.ExceptionType.init -> void
+CD.RequestResponse.RequestResponseLogEntry.Host.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.Host.init -> void
+CD.RequestResponse.RequestResponseLogEntry.Method.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.Method.init -> void
+CD.RequestResponse.RequestResponseLogEntry.Path.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.Path.init -> void
+CD.RequestResponse.RequestResponseLogEntry.Protocol.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.Protocol.init -> void
+CD.RequestResponse.RequestResponseLogEntry.QueryString.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.QueryString.init -> void
+CD.RequestResponse.RequestResponseLogEntry.RequestBody.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.RequestBody.init -> void
+CD.RequestResponse.RequestResponseLogEntry.RequestBodyTruncated.get -> bool
+CD.RequestResponse.RequestResponseLogEntry.RequestBodyTruncated.init -> void
+CD.RequestResponse.RequestResponseLogEntry.RequestContentType.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.RequestContentType.init -> void
+CD.RequestResponse.RequestResponseLogEntry.RequestResponseLogEntry() -> void
+CD.RequestResponse.RequestResponseLogEntry.ResponseBody.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.ResponseBody.init -> void
+CD.RequestResponse.RequestResponseLogEntry.ResponseBodyTruncated.get -> bool
+CD.RequestResponse.RequestResponseLogEntry.ResponseBodyTruncated.init -> void
+CD.RequestResponse.RequestResponseLogEntry.ResponseContentType.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.ResponseContentType.init -> void
+CD.RequestResponse.RequestResponseLogEntry.Scheme.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.Scheme.init -> void
+CD.RequestResponse.RequestResponseLogEntry.StatusCode.get -> int?
+CD.RequestResponse.RequestResponseLogEntry.StatusCode.init -> void
+CD.RequestResponse.RequestResponseLogEntry.Timestamp.get -> System.DateTimeOffset?
+CD.RequestResponse.RequestResponseLogEntry.Timestamp.init -> void
+CD.RequestResponse.RequestResponseLogEntry.TraceIdentifier.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.TraceIdentifier.init -> void
+CD.RequestResponse.RequestResponseLogEntry.UserAgent.get -> string?
+CD.RequestResponse.RequestResponseLogEntry.UserAgent.init -> void
+CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.ClientIpAddress = 1024 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.Default = CD.RequestResponse.RequestResponseLogFields.Timestamp | CD.RequestResponse.RequestResponseLogFields.TraceIdentifier | CD.RequestResponse.RequestResponseLogFields.Method | CD.RequestResponse.RequestResponseLogFields.Path | CD.RequestResponse.RequestResponseLogFields.Protocol | CD.RequestResponse.RequestResponseLogFields.StatusCode | CD.RequestResponse.RequestResponseLogFields.Duration -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.Duration = 512 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.ExceptionType = 65536 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.Host = 16 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.Method = 4 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.None = 0 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.Path = 32 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.Protocol = 128 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.QueryString = 64 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.RequestBody = 16384 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.RequestContentType = 4096 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.ResponseBody = 32768 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.ResponseContentType = 8192 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.Scheme = 8 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.StatusCode = 256 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.Timestamp = 1 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.TraceIdentifier = 2 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLogFields.UserAgent = 2048 -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLoggingOptions
+CD.RequestResponse.RequestResponseLoggingOptions.EnableMicrosoftExtensionsLogging.get -> bool
+CD.RequestResponse.RequestResponseLoggingOptions.EnableMicrosoftExtensionsLogging.set -> void
+CD.RequestResponse.RequestResponseLoggingOptions.ExcludedPathPrefixes.get -> System.Collections.Generic.ICollection<Microsoft.AspNetCore.Http.PathString>!
+CD.RequestResponse.RequestResponseLoggingOptions.Fields.get -> CD.RequestResponse.RequestResponseLogFields
+CD.RequestResponse.RequestResponseLoggingOptions.Fields.set -> void
+CD.RequestResponse.RequestResponseLoggingOptions.Handler.get -> System.Func<CD.RequestResponse.RequestResponseLogEntry!, System.Threading.CancellationToken, System.Threading.Tasks.ValueTask>?
+CD.RequestResponse.RequestResponseLoggingOptions.Handler.set -> void
+CD.RequestResponse.RequestResponseLoggingOptions.LogLevel.get -> Microsoft.Extensions.Logging.LogLevel
+CD.RequestResponse.RequestResponseLoggingOptions.LogLevel.set -> void
+CD.RequestResponse.RequestResponseLoggingOptions.RequestBodyLogLimit.get -> int
+CD.RequestResponse.RequestResponseLoggingOptions.RequestBodyLogLimit.set -> void
+CD.RequestResponse.RequestResponseLoggingOptions.RequestBodyTransform.get -> System.Func<Microsoft.AspNetCore.Http.HttpContext!, string!, string!>?
+CD.RequestResponse.RequestResponseLoggingOptions.RequestBodyTransform.set -> void
+CD.RequestResponse.RequestResponseLoggingOptions.RequestResponseLoggingOptions() -> void
+CD.RequestResponse.RequestResponseLoggingOptions.ResponseBodyLogLimit.get -> int
+CD.RequestResponse.RequestResponseLoggingOptions.ResponseBodyLogLimit.set -> void
+CD.RequestResponse.RequestResponseLoggingOptions.ResponseBodyTransform.get -> System.Func<Microsoft.AspNetCore.Http.HttpContext!, string!, string!>?
+CD.RequestResponse.RequestResponseLoggingOptions.ResponseBodyTransform.set -> void
+CD.RequestResponse.RequestResponseLoggingOptions.ShouldLog.get -> System.Func<Microsoft.AspNetCore.Http.HttpContext!, bool>?
+CD.RequestResponse.RequestResponseLoggingOptions.ShouldLog.set -> void
+CD.RequestResponse.RequestResponseServiceCollectionExtensions
+static CD.RequestResponse.RequestResponseApplicationBuilderExtensions.UseRequestResponseLogging(this Microsoft.AspNetCore.Builder.IApplicationBuilder! app) -> Microsoft.AspNetCore.Builder.IApplicationBuilder!
+static CD.RequestResponse.RequestResponseServiceCollectionExtensions.AddRequestResponseFileLogging(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Action<CD.RequestResponse.FileRequestResponseLoggingOptions!>? configure = null) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static CD.RequestResponse.RequestResponseServiceCollectionExtensions.AddRequestResponseLogging(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services, System.Action<CD.RequestResponse.RequestResponseLoggingOptions!>? configure = null) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!
+static CD.RequestResponse.RequestResponseServiceCollectionExtensions.AddRequestResponseLogSink<TSink>(this Microsoft.Extensions.DependencyInjection.IServiceCollection! services) -> Microsoft.Extensions.DependencyInjection.IServiceCollection!

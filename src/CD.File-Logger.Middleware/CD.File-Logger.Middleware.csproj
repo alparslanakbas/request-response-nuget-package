@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+    <PackageId>CD.File-Logger.Middleware</PackageId>
+    <Version>2.0.0-preview.1</Version>
+    <Description>Compatibility package for CD.File-Logger.Middleware 1.x users. File logging is now included in CD.RequestResponse.Middleware.</Description>
+    <PackageTags>ASP.NET Core;Middleware;FileLogger;Compatibility</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <IncludeSymbols>false</IncludeSymbols>
+    <SuppressDependenciesWhenPacking>false</SuppressDependenciesWhenPacking>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CD.RequestResponse.Middleware\CD.RequestResponse.Middleware.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE" Link="LICENSE.txt" Pack="true" PackagePath="/" />
+    <None Include="..\..\assets\icon.png" Link="icon.png" Pack="true" PackagePath="/" />
+    <None Include="README.md" Pack="true" PackagePath="/" />
+    <None Include="_._" Pack="true" PackagePath="lib/net8.0/;lib/net9.0/;lib/net10.0/" />
+  </ItemGroup>
+
+</Project>

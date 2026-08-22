@@ -1,0 +1,5 @@
+namespace CD.RequestResponse.Internal;
+
+internal sealed class RequestResponseLoggingRegistrationMarker;
+
+internal sealed class FileRequestResponseLoggingRegistrationMarker;

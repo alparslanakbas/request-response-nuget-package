@@ -1,82 +1,147 @@
-# Request-Response Middleware
+# CD.RequestResponse.Middleware
 
-![Road Map for the project](https://github.com/alparslanakbas/request-response-nuget-package/blob/main/road-map/request-with-middleware.PNG "Road Map")
+[![NuGet](https://img.shields.io/nuget/v/CD.RequestResponse.Middleware.svg)](https://www.nuget.org/packages/CD.RequestResponse.Middleware)
+[![CI](https://github.com/alparslanakbas/request-response-nuget-package/actions/workflows/ci.yml/badge.svg)](https://github.com/alparslanakbas/request-response-nuget-package/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Description
+Privacy-conscious ASP.NET Core request/response logging for .NET 8, 9, and 10. It provides structured `ILogger` output, custom sinks and handlers, bounded opt-in body capture, and asynchronous JSON Lines file logging.
 
-This project represents a build-in Request-Response handling and logging middleware as an extension method for `IApplicationBuilder`
-It adds middleware for managing and handling Request-Response details in your web api project. It is also configurable by passing options whilst initializing.
+## Why this package?
 
-### Dependencies
+- Safe defaults: bodies, query strings, client IP addresses, and user agents are not captured unless explicitly enabled.
+- Bounded text-body capture avoids unbounded memory usage; binary bodies are never decoded as text.
+- The response is tee'd to the client while it is observed, so logging does not replace or delay the response stream.
+- Sink and handler failures never break a successful HTTP response.
+- File logging uses a bounded background queue and daily `.jsonl` files.
+- No external IP lookup and no extra runtime NuGet dependencies.
 
-* [Microsoft.AspNetCore.Http.Extensions](https://www.nuget.org/packages/Microsoft.AspNetCore.Http.Extensions/)
-* [Microsoft.Extensions.Logging.Abstractions](https://www.nuget.org/packages/Microsoft.Extensions.Logging.Abstractions/)
-* [Microsoft.IO.RecyclableMemoryStream](https://www.nuget.org/packages/Microsoft.IO.RecyclableMemoryStream/)
+## Install
 
-## Getting Started
+```bash
+dotnet add package CD.RequestResponse.Middleware --prerelease
+```
 
-This library help you to get details of request and response by adding a Middleware on your system. When the request end, it calls a handler method by passing a context model which held the required properties you might need.
-
-This extension method can easily be called in `Configure` method in your startup.cs file of web api projects.
+## Quick start
 
 ```csharp
-app.AddRequestResponseMiddleware(opts => 
-{
-    opts.UseHandler(async context =>
-{
-    Console.WriteLine("--Handler--\n");
-    Console.WriteLine($"Request: {context.Request}");
-    Console.WriteLine($"Response: {context.Response}");
-    Console.WriteLine($"Timer: {context.FormatedRequestTime}");
-    Console.WriteLine($"Url: {context.Url}");
-    Console.WriteLine($"Status Code: {context.StatusCode}");
-    Console.WriteLine($"Method: {context.Method}");
-    Console.WriteLine($"HTTP Version: {context.HttpVersion}");
-    Console.WriteLine($"Client IP Address: {context.ClientIPAddress}");
-    Console.WriteLine($"External IP Address: {context.ExternalIPAddress}");
-    Console.WriteLine($"User Agent: {context.UserAgent}");
-    Console.WriteLine($"Cookies: {context.Cookies}");
+using CD.RequestResponse;
 
-    await Task.CompletedTask;
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddRequestResponseLogging(options =>
+{
+    options.ExcludedPathPrefixes.Add("/health");
 });
-});
+
+var app = builder.Build();
+
+app.UseRequestResponseLogging();
+
+app.MapGet("/orders/{id:int}", (int id) => Results.Ok(new { id }));
+app.Run();
 ```
 
-By using `UseHandler` method, you can easily access the properties in the context. This method is fired just before the request is completed by the middleware which collects all the information to serve you. There are several properties you might need in this context. You may use this data to do whatever you want to. If you just want to log all the data, you can simply use `UseLogger` method. 
-By using this way, you basically tell the middleware that it can use the logging features that your system already have.
+The default fields are timestamp, trace identifier, method, path, protocol, status code, and duration. Output is sent through `Microsoft.Extensions.Logging`, so it works with console logging, OpenTelemetry, Serilog, Application Insights, and other configured providers.
 
-Let's say you use console logging. That would mean, your system will send all the produced logs to the console. In this case, when you use `UseLogger` and give it a default log provider of your system, the request and response logs would directly goes to your console. You are also able to add more than one built-in place to write the logs to such as `Debug`, `EventLog` or even custom logger libraries such as `Serilog`.
+## Asynchronous file logging
 
-``` csharp
-services.AddLogging(configure => 
-{
-    configure.AddConsole();
-    configure.AddDebug();
-    configure.AddEventLog();
-});
-```
+File logging is included in the main package:
 
 ```csharp
-opts.UseLogger(app.Services.GetRequiredService<ILoggerFactory>(), opts =>
+builder.Services.AddRequestResponseFileLogging(options =>
 {
-    opts.LogLevel = LogLevel.Error;
-    opts.LoggerCategoryName = "RRM-Api-Test";
-
-    opts.LoggingFields = 
-                     RRM_Library.Models.LoggingOptions.LogFields.Request |
-                     RRM_Library.Models.LoggingOptions.LogFields.Response |
-                     RRM_Library.Models.LoggingOptions.LogFields.ResponseTime |
-                     RRM_Library.Models.LoggingOptions.LogFields.StatusCode |
-                     RRM_Library.Models.LoggingOptions.LogFields.HostName |
-                     RRM_Library.Models.LoggingOptions.LogFields.Path |
-                     RRM_Library.Models.LoggingOptions.LogFields.QueryString 
-                     ;
+    options.DirectoryPath = "logs";
+    options.FileNamePrefix = "http";
+    options.RollDaily = true;
+    options.QueueCapacity = 1_024;
 });
 ```
 
-Once you choose to use your loggerfactory to write the logs to, you might want to customize the log output. 
+Each line is an independent JSON document. The legacy `CD.File-Logger.Middleware` package remains only as a compatibility package that installs this main package.
 
-On the other hand, you can also customize the output properties by adding what information you want to see on the output. To do that, you can add the properties you want to the `LoggingFields` list. `LogingLevel` property is used to send the logs to the providers by using this level. Let's say you customized your Console Logging by only showing warning and error message by setting the LogLevel to 'Warning'. In this case, your request and response logs wouldn't appear on the console unless you set the `LoggingLevel` to LogLevel.Warning. So you are able to customize the log level that middleware uses while sending the logs to the providers. The `LoggerCategoryName` is used to create the logger by giving it a name. 
+## Opting into bodies
 
-PS: When you use both `UseHandler` and `UseLogger`, the calling order is the Logger is ran first and then the Handler is fired.
+Request and response bodies can contain passwords, tokens, personal data, or payment information. Enable them only when you have a clear data-retention policy and redact secrets before dispatch:
 
+```csharp
+builder.Services.AddRequestResponseLogging(options =>
+{
+    options.Fields |= RequestResponseLogFields.RequestBody |
+        RequestResponseLogFields.ResponseBody;
+    options.RequestBodyLogLimit = 8 * 1024;
+    options.ResponseBodyLogLimit = 8 * 1024;
+
+    options.RequestBodyTransform = (context, body) => RedactSecrets(body);
+    options.ResponseBodyTransform = (context, body) => RedactSecrets(body);
+});
+```
+
+Only known textual media types such as JSON, XML, form URL encoded data, GraphQL, and `text/*` are eligible. Limits must be between 1 byte and 1 MiB.
+
+## Choose fields and filter requests
+
+```csharp
+builder.Services.AddRequestResponseLogging(options =>
+{
+    options.Fields = RequestResponseLogFields.Default |
+        RequestResponseLogFields.Host |
+        RequestResponseLogFields.ResponseContentType |
+        RequestResponseLogFields.ExceptionType;
+
+    options.ShouldLog = context => !context.Request.Path.StartsWithSegments("/metrics");
+});
+```
+
+`ClientIpAddress` uses only ASP.NET Core's `RemoteIpAddress`; it does not trust forwarded headers directly. If the app is behind a trusted proxy, configure ASP.NET Core Forwarded Headers middleware before `UseRequestResponseLogging`.
+
+## Custom handler or sink
+
+For a small integration, configure a handler:
+
+```csharp
+builder.Services.AddRequestResponseLogging(options =>
+{
+    options.Handler = (entry, cancellationToken) =>
+    {
+        // Send the immutable snapshot to your own destination.
+        return ValueTask.CompletedTask;
+    };
+});
+```
+
+For a reusable destination, implement `IRequestResponseLogSink` and register it once:
+
+```csharp
+builder.Services.AddRequestResponseLogSink<MyAuditSink>();
+```
+
+Sink failures are logged as warnings and isolated from the HTTP pipeline.
+
+## Middleware order
+
+Place forwarded-header handling first, then this middleware before endpoints. Place exception handling before or after it depending on whether you want the transformed error response or the original exception outcome to be observed.
+
+```csharp
+app.UseForwardedHeaders();
+app.UseRequestResponseLogging();
+app.UseExceptionHandler();
+```
+
+## Version 2 migration
+
+Version 2 replaces the original `RRM_Library` API and merges file logging into the main package. See [the migration guide](docs/MIGRATION_V2.md) for exact mappings and behavior changes.
+
+## Development
+
+```bash
+dotnet restore CD.RequestResponse.sln
+dotnet build CD.RequestResponse.sln -c Release --no-restore
+dotnet test CD.RequestResponse.sln -c Release --no-build
+```
+
+The repository includes an executable [sample API](samples/CD.RequestResponse.SampleApi) and integration tests based on ASP.NET Core TestServer.
+Maintainers can follow the [trusted publishing release guide](docs/RELEASING.md).
+
+## License
+
+[MIT](LICENSE)
